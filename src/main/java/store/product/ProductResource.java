@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.util.UUID;
+import java.math.BigDecimal;
 
 @RestController
 public class ProductResource implements ProductController {
@@ -11,6 +13,20 @@ public class ProductResource implements ProductController {
     @Autowired
     private ProductService productService;
 
+    @Override
+    public ResponseEntity<List<ProductOut>> findAll() {
+        return ResponseEntity
+        .ok()
+        .body(ProductParser.to(productService.findAll()));
+    }
+    @Override
+    public ResponseEntity<ProductOut> findById(String id) {
+        Product product = productService.findById(id);
+        return ResponseEntity
+        .ok()
+        .body(ProductParser.to(product));
+    }
+    
     @Override
     public ResponseEntity<ProductOut> create(ProductIn in) {
         Product product = ProductParser.to(in);
@@ -24,24 +40,10 @@ public class ProductResource implements ProductController {
                 .toUri()
         ).body(ProductParser.to(saved));
     }
-
+    
+    
     @Override
-    public ResponseEntity<ProductOut> findById(Long id) {
-        Product product = productService.findById(id);
-        return ResponseEntity
-        .ok()
-        .body(ProductParser.to(product));
-    }
-
-    @Override
-    public ResponseEntity<List<ProductOut>> findAll() {
-        return ResponseEntity
-            .ok()
-            .body(ProductParser.to(productService.findAll()));
-    }
-
-    @Override
-    public ResponseEntity<Void> delete(Long id) {
+    public ResponseEntity<Void> delete(String id) {
         productService.delete(id);
         return ResponseEntity.noContent().build(); 
     }

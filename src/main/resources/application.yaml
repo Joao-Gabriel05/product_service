@@ -16,12 +16,15 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   flyway:
-    baseline-on-migrate: true
+    baseline-on-migrate: true  
     schemas: product
+    locations: classpath:db/migrations
+
   jpa:
     properties:
       hibernate:
-        default_schema: product
+        default_schema: product    
+
 
 logging:
   level:
